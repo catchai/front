@@ -1,57 +1,57 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import {
-  retrieveTutorials,
-  findTutorialsByTitle,
-  deleteAllTutorials,
-} from "../actions/tutorials";
+  retrieveTasks,
+  findTasksByDescription,
+  deleteAllTasks,
+} from "../actions/tasks";
 import { Link } from "react-router-dom";
 
-class TutorialsList extends Component {
+class TasksList extends Component {
   constructor(props) {
     super(props);
-    this.onChangeSearchTitle = this.onChangeSearchTitle.bind(this);
+    this.onChangeSearchDescription = this.onChangeSearchDescription.bind(this);
     this.refreshData = this.refreshData.bind(this);
-    this.setActiveTutorial = this.setActiveTutorial.bind(this);
-    this.findByTitle = this.findByTitle.bind(this);
-    this.removeAllTutorials = this.removeAllTutorials.bind(this);
+    this.setActiveTask = this.setActiveTask.bind(this);
+    this.findTaskyDescription = this.findTaskByDescription.bind(this);
+    this.removeAllTasks = this.removeAllTasks.bind(this);
 
     this.state = {
-      currentTutorial: null,
+      currentTask: null,
       currentIndex: -1,
-      searchTitle: "",
+      searchDescription: "",
     };
   }
 
   componentDidMount() {
-    this.props.retrieveTutorials();
+    this.props.retrieveTasks();
   }
 
-  onChangeSearchTitle(e) {
-    const searchTitle = e.target.value;
+  onChangeSearchDescription(e) {
+    const searchDescription = e.target.value;
 
     this.setState({
-      searchTitle: searchTitle,
+      searchDescription: searchDescription,
     });
   }
 
   refreshData() {
     this.setState({
-      currentTutorial: null,
+      currentTask: null,
       currentIndex: -1,
     });
   }
 
-  setActiveTutorial(tutorial, index) {
+  setActiveTask(task, index) {
     this.setState({
-      currentTutorial: tutorial,
+      currentTask: task,
       currentIndex: index,
     });
   }
 
-  removeAllTutorials() {
+  removeAllTasks() {
     this.props
-      .deleteAllTutorials()
+      .deleteAllTasks()
       .then((response) => {
         console.log(response);
         this.refreshData();
@@ -61,15 +61,15 @@ class TutorialsList extends Component {
       });
   }
 
-  findByTitle() {
+  findTaskByDescription() {
     this.refreshData();
 
-    this.props.findTutorialsByTitle(this.state.searchTitle);
+    this.props.findTasksByDescription(this.state.searchDescription);
   }
 
   render() {
-    const { searchTitle, currentTutorial, currentIndex } = this.state;
-    const { tutorials } = this.props;
+    const { searchDescription, currentTask, currentIndex } = this.state;
+    const { tasks } = this.props;
 
     return (
       <div className="list row">
@@ -78,81 +78,81 @@ class TutorialsList extends Component {
             <input
               type="text"
               className="form-control"
-              placeholder="Search by title"
-              value={searchTitle}
-              onChange={this.onChangeSearchTitle}
+              placeholder="Búsqueda por Descripción"
+              value={searchDescription}
+              onChange={this.onChangeSearchDescription}
             />
             <div className="input-group-append">
               <button
                 className="btn btn-outline-secondary"
                 type="button"
-                onClick={this.findByTitle}
+                onClick={this.findByDescription}
               >
-                Search
+                Búsqueda
               </button>
             </div>
           </div>
         </div>
         <div className="col-md-6">
-          <h4>Tutorials List</h4>
+          <h4>Listado de Tareas</h4>
 
           <ul className="list-group">
-            {tutorials &&
-              tutorials.map((tutorial, index) => (
+            {tasks &&
+              tasks.map((task, index) => (
                 <li
                   className={
                     "list-group-item " +
                     (index === currentIndex ? "active" : "")
                   }
-                  onClick={() => this.setActiveTutorial(tutorial, index)}
+                  onClick={() => this.setActiveTask(task, index)}
                   key={index}
                 >
-                  {tutorial.title}
+                  {task.descripcion}
                 </li>
               ))}
           </ul>
 
           <button
             className="m-3 btn btn-sm btn-danger"
-            onClick={this.removeAllTutorials}
+            onClick={this.removeAllTasks}
           >
-            Remove All
+            Eliminar Todo
           </button>
         </div>
         <div className="col-md-6">
-          {currentTutorial ? (
+          {currentTask ? (
             <div>
-              <h4>Tutorial</h4>
+              <h4>Tarea</h4>
               <div>
                 <label>
-                  <strong>Title:</strong>
+                  <strong>Descripcion:</strong>
                 </label>{" "}
-                {currentTutorial.title}
+                {currentTask.descripcion}
               </div>
               <div>
                 <label>
-                  <strong>Description:</strong>
+                  <strong>Creacion:</strong>
                 </label>{" "}
-                {currentTutorial.description}
+                {currentTask.fechaCreacion}
               </div>
               <div>
                 <label>
-                  <strong>Status:</strong>
+                  <strong>Vigencia:</strong>
                 </label>{" "}
-                {currentTutorial.published ? "Published" : "Pending"}
+                {currentTask.vigente ? "Activa" : "No"}
               </div>
 
               <Link
-                to={"/tutorials/" + currentTutorial.id}
+                to={"/tasks/" + currentTask.id}
                 className="badge badge-warning"
               >
-                Edit
+                Editar
               </Link>
             </div>
           ) : (
             <div>
               <br />
-              <p>Please click on a Tutorial...</p>
+              <p>Favor hace Click sobre alguna tarea...</p>
             </div>
           )}
         </div>
@@ -163,12 +163,12 @@ class TutorialsList extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    tutorials: state.tutorials,
+    tasks: state.tasks,
   };
 };
 
 export default connect(mapStateToProps, {
-  retrieveTutorials,
-  findTutorialsByTitle,
-  deleteAllTutorials,
-})(TutorialsList);
+  retrieveTasks,
+  findTasksByDescription,
+  deleteAllTasks,
+})(TasksList);

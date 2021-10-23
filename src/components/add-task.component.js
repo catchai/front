@@ -1,14 +1,22 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { createTutorial } from "../actions/tutorials";
+import { createTask } from "../actions/tasks";
 
-class AddTutorial extends Component {
+
+/**
+ * 
+ * Alejandro Sandoval Alias Joker
+ * 
+ * Agregacion Task 
+ * 
+ */
+class AddTask extends Component {
   constructor(props) {
     super(props);
     this.onChangeTitle = this.onChangeTitle.bind(this);
     this.onChangeDescription = this.onChangeDescription.bind(this);
-    this.saveTutorial = this.saveTutorial.bind(this);
-    this.newTutorial = this.newTutorial.bind(this);
+    this.saveTask = this.saveTask.bind(this);
+    this.newTask = this.newTask.bind(this);
 
     this.state = {
       id: null,
@@ -32,11 +40,11 @@ class AddTutorial extends Component {
     });
   }
 
-  saveTutorial() {
+  saveTask() {
     const { title, description } = this.state;
 
     this.props
-      .createTutorial(title, description)
+      .createTask(title, description)
       .then((data) => {
         this.setState({
           id: data.id,
@@ -53,7 +61,7 @@ class AddTutorial extends Component {
       });
   }
 
-  newTutorial() {
+  newTask() {
     this.setState({
       id: null,
       title: "",
@@ -70,40 +78,53 @@ class AddTutorial extends Component {
         {this.state.submitted ? (
           <div>
             <h4>You submitted successfully!</h4>
-            <button className="btn btn-success" onClick={this.newTutorial}>
+            <button className="btn btn-success" onClick={this.newTask}>
               Add
             </button>
           </div>
         ) : (
           <div>
             <div className="form-group">
-              <label htmlFor="title">Title</label>
+              <label htmlFor="descripcion">Descripcion</label>
               <input
                 type="text"
                 className="form-control"
-                id="title"
+                id="descripcion"
                 required
-                value={this.state.title}
-                onChange={this.onChangeTitle}
-                name="title"
+                value={this.state.descripcion}
+                onChange={this.onChangeDescription}
+                name="descripcion"
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="description">Description</label>
+              <label htmlFor="fechaCreacion">Fecha</label>
               <input
                 type="text"
                 className="form-control"
-                id="description"
+                id="fechaCreacion"
                 required
-                value={this.state.description}
-                onChange={this.onChangeDescription}
-                name="description"
+                value={this.state.fechaCreacion}
+                onChange={this.onChangeFechaCreacion}
+                name="fechaCreacion"
               />
             </div>
 
-            <button onClick={this.saveTutorial} className="btn btn-success">
-              Submit
+            <div className="form-group">
+              <label htmlFor="vigente">Vigente</label>
+              <input
+                type="boolean"
+                className="form-control"
+                id="vigente"
+                required
+                value={this.state.vigente}
+                onChange={this.onChangeFechaCreacion}
+                name="vigente"
+              />
+            </div>
+
+            <button onClick={this.saveTask} className="btn btn-success">
+              Guardar
             </button>
           </div>
         )}
@@ -112,4 +133,4 @@ class AddTutorial extends Component {
   }
 }
 
-export default connect(null, { createTutorial })(AddTutorial);
+export default connect(null, { createTask })(AddTask);
